@@ -1,0 +1,118 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+  <h4 style="color:white;cursor: pointer;" (click)="reachHome()">WineKart</h4>
+  <div class ="icons ml-auto">
+  <a class="nav-link active " (click)="reachHome()">
+    <i class="fa fa-home cursorPointer fa-lg" style="color:white" aria-hidden="true"></i>
+  </a>
+  <a class="nav-link active" (click)="logOut()">
+      <i class="fa fa-sign-out cursorPointer fa-lg" style="color:white" aria-hidden="true"></i>
+    </a>
+  </div>
+</nav>
+<br/>
+<div class="container-fluid" style="text-align:center">
+  <h3 id="heading">Welcome to the WineKart</h3>
+  <br/>
+  <h3 class="filterHeading" style="color:rgb(252, 196, 94)" *ngIf="isProvince">Wines from Provinces in {{selectedCountry}} </h3>
+  <h3 class="filterHeading" style="color:blue" *ngIf="isRegion">Wines from Regions in {{selectedProvince}} </h3>
+  <br/>
+  <div class="row">
+    <div class="col mx-auto table-responsive">
+      <table class="table table-striped table-bordered" *ngIf="productsList!== undefined && productsList.length>0">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">S.No</th>
+            <th scope="col">Winery</th>
+            <th scope="col" *ngIf="isCountry">Country</th>
+            <th scope="col" *ngIf="isProvince">Province</th>
+            <th scope="col" *ngIf="isRegion">Region1</th>
+            <th scope="col" *ngIf="isRegion">Region2</th>
+            <th scope="col">Variety</th>
+            <th scope="col" (click)="setOrder('price')">Price
+              <span class="cursorPointer" [hidden]="reverse">▼</span>
+              <span class="cursorPointer" [hidden]="!reverse">▲</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of productsList|paginate: { itemsPerPage: 20, currentPage: p }|orderBy: order:reverse:'case-insensitive'; index as i">
+            <th scope="row">{{i+1}}</th>
+            <td>
+              <h4 style="color: brown">
+                {{product.winery.split(' ')[0]}}</h4>
+            </td>
+            <td *ngIf="isCountry">
+              <h4>
+                <span class="badge badge-pill badge-secondary  " (click)="countryFilter(product.country)">
+                  {{product.country}}</span>
+              </h4>
+            </td>
+            <td *ngIf="isProvince">
+              <h4>
+                <span class="badge badge-pill badge-warning" (click)="provinceFilter(product.province)">
+                  {{product.province}}</span>
+              </h4>
+            </td>
+            <td *ngIf="isRegion">
+              <h4>
+                <span class="badge badge-pill badge-primary" (click)="region1Filter(product.region_1)">
+                  {{product.region_1}}</span>
+              </h4>
+            </td>
+            <td *ngIf="isRegion">
+              <h4>
+                <span class="badge badge-pill badge-primary" (click)="region2Filter(product.region_2)">
+                  {{product.region_2}}</span>
+              </h4>
+            </td>
+            <td>
+              <h4>
+                <span class="badge badge-pill badge-success" (click)="varietyFilter(product.variety)">
+                  {{product.variety}}</span>
+              </h4>
+            </td>
+            <td>
+              <h5>
+                <span class="badge badge-pill badge-info">{{product.price}}</span>&nbsp;
+                <i class="fa fa-info-circle"  style="color:#ff4081" aria-hidden="true" data-toggle="modal" data-target="#infoModal"></i>
+              </h5>
+            </td>
+            <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header" style="text-align: center">
+                    <h5 class="modal-title" id="infoModalLabel">{{product.winery}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <li class="list-group-item list-group-item-primary">Designation : {{product.designation}}</li>
+                    <li class="list-group-item list-group-item-secondary">Description :{{product.description}} </li>
+                    <li class="list-group-item list-group-item-success">Points :
+                      <span class="badge badge-light">{{product.points}}</span>
+                    </li>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+  </div>
+
+</div>
+
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" loadingText="Loading..." type="ball-scale-multiple">
+</ngx-spinner>
+
+
+
+
+<pagination-controls style="margin-left:10vw;" (pageChange)="p = $event"></pagination-controls>

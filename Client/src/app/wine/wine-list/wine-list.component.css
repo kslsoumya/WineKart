@@ -1,0 +1,32 @@
+.badge {
+    cursor: pointer;
+    padding: 0.5em;
+}
+
+#heading {
+    color:purple;
+    font-style: italic;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.filterHeading {
+    font-weight: bold;
+    text-decoration: underline;
+}
+/* table th {
+    text-align: center; 
+ } */
+
+ .cursorPointer {
+     cursor: pointer;
+ }
+ .icons {
+     display: inline-block;
+ }
+
+ a {
+     display: inline-block;
+ }
+
+ 
