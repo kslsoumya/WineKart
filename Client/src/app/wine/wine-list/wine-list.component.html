@@ -15,6 +15,8 @@
   <br/>
   <h3 class="filterHeading" style="color:rgb(252, 196, 94)" *ngIf="isProvince">Wines from Provinces in {{selectedCountry}} </h3>
   <h3 class="filterHeading" style="color:blue" *ngIf="isRegion">Wines from Regions in {{selectedProvince}} </h3>
+  <h3 class="filterHeading" style="color:rgb(145, 255, 0)" *ngIf="isRegionFilter">Wines from {{selectedRegion}} </h3>
+  <h3 class="filterHeading" style="color:rgb(255, 0, 106)" *ngIf="isVariety">Wines of variety {{selectedVariety}} </h3>
   <br/>
   <div class="row">
     <div class="col mx-auto table-responsive">
@@ -23,7 +25,7 @@
           <tr>
             <th scope="col">S.No</th>
             <th scope="col">Winery</th>
-            <th scope="col" *ngIf="isCountry">Country</th>
+            <th scope="col" *ngIf="isCountry||isVariety">Country</th>
             <th scope="col" *ngIf="isProvince">Province</th>
             <th scope="col" *ngIf="isRegion">Region1</th>
             <th scope="col" *ngIf="isRegion">Region2</th>
@@ -36,7 +38,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let product of productsList|paginate: { itemsPerPage: 20, currentPage: p }|orderBy: order:reverse:'case-insensitive'; index as i">
-            <th scope="row">{{i+1}}</th>
+            <th scope="row">{{i+1+(p-1)*20}}</th>
             <td>
               <h4 style="color: brown">
                 {{product.winery.split(' ')[0]}}</h4>
@@ -50,47 +52,47 @@
             <td *ngIf="isProvince">
               <h4>
                 <span class="badge badge-pill badge-warning" (click)="provinceFilter(product.province)">
-                  {{product.province}}</span>
+                  {{product.province | NA : product.province}}</span>
               </h4>
             </td>
             <td *ngIf="isRegion">
               <h4>
                 <span class="badge badge-pill badge-primary" (click)="region1Filter(product.region_1)">
-                  {{product.region_1}}</span>
+                  {{product.region_1 | NA : product.region_1}}</span>
               </h4>
             </td>
             <td *ngIf="isRegion">
               <h4>
                 <span class="badge badge-pill badge-primary" (click)="region2Filter(product.region_2)">
-                  {{product.region_2}}</span>
+                  {{product.region_2| NA : product.region_2}}</span>
               </h4>
             </td>
             <td>
               <h4>
                 <span class="badge badge-pill badge-success" (click)="varietyFilter(product.variety)">
-                  {{product.variety}}</span>
+                  {{product.variety| NA : product.variety}}</span>
               </h4>
             </td>
             <td>
               <h5>
-                <span class="badge badge-pill badge-info">{{product.price}}</span>&nbsp;
-                <i class="fa fa-info-circle"  style="color:#ff4081" aria-hidden="true" data-toggle="modal" data-target="#infoModal"></i>
+                <span class="badge badge-pill badge-info">{{product.price| NA : product.price}}</span>&nbsp;
+                <i class="fa fa-info-circle"  style="color:#ff4081" aria-hidden="true"  (click) = "modalClick(product)" data-toggle="modal" data-target="#infoModal"></i>
               </h5>
             </td>
-            <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal fade" *ngIf ="modalProduct!==undefined" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header" style="text-align: center">
-                    <h5 class="modal-title" id="infoModalLabel">{{product.winery}}</h5>
+                    <h5 class="modal-title" id="infoModalLabel">{{modalProduct.winery}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <li class="list-group-item list-group-item-primary">Designation : {{product.designation}}</li>
-                    <li class="list-group-item list-group-item-secondary">Description :{{product.description}} </li>
-                    <li class="list-group-item list-group-item-success">Points :
-                      <span class="badge badge-light">{{product.points}}</span>
+                    <li class="list-group-item list-group-item-primary"><strong>Designation:</strong>  {{modalProduct.designation}}</li>
+                    <li class="list-group-item list-group-item-secondary"><strong>Description:</strong>  {{modalProduct.description}} </li>
+                    <li class="list-group-item list-group-item-success"><strong>Points :</strong>
+                      <span class="badge badge-light">{{modalProduct.points}}</span>
                     </li>
                   </div>
                   <div class="modal-footer">

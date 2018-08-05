@@ -11,6 +11,7 @@ const routeLoggerMiddleware = require('./app/middlewares/routeLogger.js');
 const globalErrorMiddleware = require('./app/middlewares/appErrorHandler');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+var cmd = require('node-cmd');
 
 
 app.use(morgan('dev'));
@@ -141,6 +142,8 @@ mongoose.connection.on('open', function (err) {
     console.log("database connection open success");
     logger.info("database connection open",
       'database connection open handler', 10)
+      cmd.run('mongoimport --db winekartAppDb --collection wineCollection --type csv --file wineData.csv  --mode merge --headerline');
+
   }
   //process.exit(1)
 }); // enr mongoose connection open handler

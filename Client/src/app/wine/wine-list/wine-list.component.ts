@@ -17,22 +17,26 @@ import { CookieService } from 'ngx-cookie-service';
 export class WineListComponent implements OnInit {
 
   public productsList = [];
-  public originalList =[];
-  p: number = 1;
-  i: number = 0;
+  public originalList = [];
+  public p = 1;
+  public i = 0;
   public isCountry = true;
   public isProvince = false;
   public isRegion = false;
+  public isVariety = false;
+  public isRegionFilter = false;
   public selectedCountry;
   public selectedProvince;
+  public selectedRegion;
   public selectedVariety;
-  reverse: boolean = false;
-  order: string = 'winery';
+  public reverse = false;
+  public order = 'winery';
+  public modalProduct;
 
   constructor(private httpService: HttpService,
     private orderPipe: OrderPipe, public spinner: NgxSpinnerService, private toastr: ToastrService,
     private _router: Router,
-    private cookieService: CookieService,) {
+    private cookieService: CookieService, ) {
     this.productsList = this.orderPipe.transform(this.productsList, 'winery');
     this.originalList = this.productsList;
 
@@ -49,35 +53,42 @@ export class WineListComponent implements OnInit {
         if (data['status'] === 200) {
           this.productsList = data['data'];
           this.originalList = this.productsList;
-          console.log(this.productsList);
+          // console.log(this.productsList);
         } else {
           this.toastr.warning(data['message']);
         }
       },
       (err) => {
+        this.spinner.hide();
         console.log(err);
-        this.toastr.error(err)
+        this.toastr.error(err);
       }
-    )
+    );
 
   }
 
-  public reachHome =() =>{
+  public reachHome = () => {
     this.productsList = this.originalList;
     this.isCountry = true;
     this.isProvince = false;
-    this.isRegion =false;
+    this.isRegion = false;
+    this.isVariety = false;
+    this.isRegionFilter = false;
 
   }
 
   public countryFilter = (name) => {
-    this.toastr.info(`${name} filter applied`)
+    this.spinner.show();
+    this.toastr.info(`${name} filter applied`);
     this.selectedCountry = name;
     this.isCountry = false;
     this.isProvince = true;
+    this.isVariety = false;
+    this.isRegionFilter = false;
     this.httpService.getProductByCountry(name).subscribe(
       (data) => {
         if (data['status'] === 200) {
+          this.spinner.hide();
           this.productsList = data['data'];
 
         } else {
@@ -88,16 +99,21 @@ export class WineListComponent implements OnInit {
       (err) => {
         this.toastr.error(err);
       }
-    )
+    );
   }
 
   public region1Filter = (name) => {
-    this.toastr.info(`${name} filter applied`)
+    this.spinner.show();
+    this.toastr.info(`${name} filter applied`);
     this.isProvince = false;
-    this.isRegion = true;
+    this.isRegion = false;
+    this.isRegionFilter = true;
+    this.isVariety = false;
+    this.selectedRegion = name;
     this.httpService.getProductByRegion1(name).subscribe(
       (data) => {
         if (data['status'] === 200) {
+          this.spinner.hide();
           this.productsList = data['data'];
         } else {
           this.toastr.warning(data['message']);
@@ -106,13 +122,16 @@ export class WineListComponent implements OnInit {
       (err) => {
         this.toastr.error(err);
       }
-    )
+    );
   }
 
   public region2Filter = (name) => {
-    this.toastr.info(`${name} filter applied`)
+    this.toastr.info(`${name} filter applied`);
     this.isProvince = false;
-    this.isRegion = true;
+    this.isRegion = false;
+    this.isRegionFilter = true;
+    this.isVariety = false;
+    this.selectedRegion = name;
     this.httpService.getProductByRegion2(name).subscribe(
       (data) => {
         if (data['status'] === 200) {
@@ -124,17 +143,21 @@ export class WineListComponent implements OnInit {
       (err) => {
         this.toastr.error(err);
       }
-    )
+    );
   }
 
   public provinceFilter = (name) => {
-    this.toastr.info(`${name} filter applied`)
+    this.toastr.info(`${name} filter applied`);
+    this.spinner.show();
     this.selectedProvince = name;
     this.isProvince = false;
     this.isRegion = true;
+    this.isVariety = false;
+    this.isRegionFilter = false;
     this.httpService.getProductByProvince(name).subscribe(
       (data) => {
         if (data['status'] === 200) {
+          this.spinner.hide();
           this.productsList = data['data'];
         } else {
           this.toastr.warning(data['message']);
@@ -143,15 +166,21 @@ export class WineListComponent implements OnInit {
       (err) => {
         this.toastr.error(err);
       }
-    )
+    );
   }
 
   public varietyFilter = (name) => {
-    this.toastr.info(`${name} filter applied`)
+    this.toastr.info(`${name} filter applied`);
+    this.spinner.show();
     this.selectedVariety = name;
+    this.isVariety = true;
+    this.isProvince = false;
+    this.isRegion = false;
+    this.isRegionFilter = false;
     this.httpService.getProductByVariety(name).subscribe(
       (data) => {
         if (data['status'] === 200) {
+          this.spinner.hide();
           this.productsList = data['data'];
         } else {
           this.toastr.warning(data['message']);
@@ -160,7 +189,7 @@ export class WineListComponent implements OnInit {
       (err) => {
         this.toastr.error(err);
       }
-    )
+    );
   }
 
   public setOrder(value: string) {
@@ -169,6 +198,11 @@ export class WineListComponent implements OnInit {
     }
 
     this.order = value;
+  }
+
+  public modalClick = (product) => {
+    // console.log(product);
+    this.modalProduct = product;
   }
 
   public logOut: any = () => {

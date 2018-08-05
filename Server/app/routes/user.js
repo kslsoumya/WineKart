@@ -43,7 +43,6 @@ module.exports.setRouter = (app) => {
         }
     */
 
-    // bodyParams: email, password.
     app.post(`${baseUrl}/login`, userController.loginUser);
 
     
@@ -74,8 +73,7 @@ module.exports.setRouter = (app) => {
         }
     */
 
-    // auth token params: userId.
-
+    
     app.put(`${baseUrl}/forgotPwd`, userController.resetPwd);
 
       /**

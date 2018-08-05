@@ -36,10 +36,10 @@ let getAllProducts = (req, res) => {
 // End of getAllProducts function
 
 
-// Get Single Function ---
+// getWinesByCountry Function ---
 
 let getWinesByCountry = (req, res) => {
-    prodModel.find({ 'country' :req.params.countryName }, (err, retrievedDetails) => {
+    prodModel.find({ 'country' :req.params.countryName}).lean().exec((err, retrievedDetails) => {
         if (err) {
             logger.error('Failed to get Wine details', 'productController:getWinesByCountry()', 10)
             let apiResponse = response.generate(true, 'Failed to get Wine details', 500, null)
@@ -58,12 +58,12 @@ let getWinesByCountry = (req, res) => {
     })
 }
 
-// End of Get Single User Function---
+// End of getWinesByCountry Function---
 
-// Get All Active Products Function--
+// Get getWinesByRegion1 Function--
 
 let getWinesByRegion1 = (req, res) => {
-    prodModel.find({ 'region_1' :req.params.regionName }, (err, retrievedDetails) => {
+    prodModel.find({ 'region_1' :req.params.regionName }).lean().exec((err, retrievedDetails) => {
         if (err) {
             logger.error('Failed to get Product details', 'productController:getWinesByRegion1()', 10)
             let apiResponse = response.generate(true, 'Failed to get Wine details', 500, null)
@@ -81,10 +81,13 @@ let getWinesByRegion1 = (req, res) => {
         }
     })
 }
-// End of get Active Products function
+
+// End of getWinesByRegion1---
+
+// getWinesByRegion2 function ----
 
 let getWinesByRegion2 = (req, res) => {
-    prodModel.find({ 'region_2' :req.params.regionName }, (err, retrievedDetails) => {
+    prodModel.find({ 'region_2' :req.params.regionName }).lean().exec((err, retrievedDetails) => {
         if (err) {
             logger.error('Failed to get Product details', 'productController:getWinesByRegion2()', 10)
             let apiResponse = response.generate(true, 'Failed to get Product details', 500, null)
@@ -103,8 +106,12 @@ let getWinesByRegion2 = (req, res) => {
     })
 }
 
+// End of getWinesByRegion2 ---
+
+// getWinesByProvince function ---
+
 let getWinesByProvince = (req, res) => {
-    prodModel.find({ 'province' :req.params.provinceName }, (err, retrievedDetails) => {
+    prodModel.find({ 'province' :req.params.provinceName }).lean().exec((err, retrievedDetails) => {
         if (err) {
             logger.error('Failed to get Product details', 'productController:getWinesByProvince()', 10)
             let apiResponse = response.generate(true, 'Failed to get Wine details', 500, null)
@@ -123,8 +130,13 @@ let getWinesByProvince = (req, res) => {
     })
 }
 
+// End of getWinesByProvince--
+
+
+// getWinesByVariety Function ---
+
 let getWinesByVariety = (req, res) => {
-    prodModel.find({ 'variety' :req.params.varietyName }, (err, retrievedDetails) => {
+    prodModel.find({ 'variety' :req.params.varietyName }).lean().exec((err, retrievedDetails) => {
         if (err) {
             logger.error('Failed to get Product details', 'productController:getWinesByProvince()', 10)
             let apiResponse = response.generate(true, 'Failed to get Product details', 500, null)
@@ -142,6 +154,8 @@ let getWinesByVariety = (req, res) => {
         }
     })
 }
+
+// end of getWinesByVariety
 
 
 
